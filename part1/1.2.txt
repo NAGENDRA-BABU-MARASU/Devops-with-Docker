@@ -1,0 +1,32 @@
+~> docker ps -a  
+54e35d3bbfc7   nginx             "/docker-entrypoint.…"   11 seconds ago   Up 9 seconds               80/tcp                   quizzical_clarke
+990d272c084e   nginx             "/docker-entrypoint.…"   4 minutes ago    Exited (0) 3 minutes ago                            peaceful_shtern
+939b991eba33   nginx             "/docker-entrypoint.…"   4 minutes ago    Up 4 minutes               80/tcp                   kind_galois
+~> docker stop 54e3
+54e3
+~> docker stop 939b
+939b
+~> docker ps -a  
+54e35d3bbfc7   nginx             "/docker-entrypoint.…"   41 seconds ago   Exited (0) 10 seconds ago                            quizzical_clarke
+990d272c084e   nginx             "/docker-entrypoint.…"   4 minutes ago    Exited (0) 4 minutes ago                             peaceful_shtern
+939b991eba33   nginx             "/docker-entrypoint.…"   4 minutes ago    Exited (0) 4 seconds ago                             kind_galois
+~> docker container rm 54e
+54e
+~> docker rm peaceful_shtern
+peaceful_shtern
+~> docker rm 939
+939
+~> docker ps -a  
+~> docker images  
+nginx               latest    e4720093a3c1   4 weeks ago     187MB
+~> docker image rm nginx
+Untagged: nginx:latest
+Untagged: nginx@sha256:c26ae7472d624ba1fafd296e73cecc4f93f853088e6a9c13c0d52f6ca5865107
+Deleted: sha256:e4720093a3c1381245b53a5a51b417963b3c4472d3f47fc301930a4f3b17666a
+Deleted: sha256:583de6ce675ade688fa76e7c18948b4907557a139e12825ae85e5a8c947e2c89
+Deleted: sha256:1084f34dba33ee0238270b757d7d4c3ffa06fcac38f1be5bf26bf35d8982eb17
+Deleted: sha256:eb8c0a03ddeb2a6164cddaa21c9795cf8e20dbe788ed6bcaa9cc2b5a58fa8aff
+Deleted: sha256:3a4f946657e22d88014e3063827b07c83ac6d999d7f7b19618037bcee5c5f009
+Deleted: sha256:0c2e669c3c8abe5ce516bd0ffbb3dec76614a9cd1dec058a7c4815a403adee83
+Deleted: sha256:0814ebf6e0ed919bf8bf686038d645aa2b535eb9a6bc4b58b2df1b31d499fe3d
+~> docker images  

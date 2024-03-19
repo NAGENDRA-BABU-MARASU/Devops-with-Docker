@@ -1,0 +1,19 @@
+~> docker container run -d nginx
+939b991eba3384a5c8c8c890e2708a1be4a7f98d7de39e58f9138dafef19def0
+~> docker run -d nginx
+78521a97f0a5cac85caf54854f7556836d501e0337068a243f1e3626662e546a
+~> docker run -d nginx
+990d272c084e8f230d9cfaaf0c18fdc686873c8e45cdfef7eef326754769fcc9
+~> docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS     NAMES
+990d272c084e   nginx     "/docker-entrypoint.…"   3 seconds ago    Up 3 seconds    80/tcp    peaceful_shtern
+78521a97f0a5   nginx     "/docker-entrypoint.…"   8 seconds ago    Up 8 seconds    80/tcp    eager_ptolemy
+939b991eba33   nginx     "/docker-entrypoint.…"   12 seconds ago   Up 12 seconds   80/tcp    kind_galois
+~> docker stop 990
+990
+~> docker container stop eager_ptolemy
+eager_ptolemy
+~> docker ps -a | grep nginx
+990d272c084e   nginx             "/docker-entrypoint.…"   25 seconds ago   Exited (0) 17 seconds ago                            peaceful_shtern
+78521a97f0a5   nginx             "/docker-entrypoint.…"   30 seconds ago   Exited (0) 5 seconds ago                             eager_ptolemy
+939b991eba33   nginx             "/docker-entrypoint.…"   34 seconds ago   Up 33 seconds               80/tcp                   kind_galois
