@@ -1,0 +1,28 @@
+~ docker build . -t web-server:v1
+  DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+              Install the buildx component to build images with BuildKit:
+              https://docs.docker.com/go/buildx/
+
+  Sending build context to Docker daemon  2.048kB
+  Step 1/2 : FROM devopsdockeruh/simple-web-service:latest
+  latest: Pulling from devopsdockeruh/simple-web-service
+  cd2b813b068d: Pull complete 
+  4f4fb700ef54: Pull complete 
+  Digest: sha256:20282b20abae04beefa9637bb565943330ed5d085a22fcf8c4878abad80be712
+  Status: Downloaded newer image for devopsdockeruh/simple-web-service:latest
+  ---> 99f995eeaa58
+  Step 2/2 : CMD server
+  ---> Running in 181e2cf8f548
+  ---> Removed intermediate container 181e2cf8f548
+  ---> e48b42ad8630
+  Successfully built e48b42ad8630
+  Successfully tagged web-server:v1
+  [root@nagendra-PC 1.8]# docker run web-server:v1
+  [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+  [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+  - using env:   export GIN_MODE=release
+  - using code:  gin.SetMode(gin.ReleaseMode)
+
+  [GIN-debug] GET    /*path                    --> server.Start.func1 (3 handlers)
+  [GIN-debug] Listening and serving HTTP on :8080
