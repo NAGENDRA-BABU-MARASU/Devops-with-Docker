@@ -1,0 +1,6 @@
+version: '3.8'
+
+services:
+  yt-dlp-ubuntu:
+    image: nagendra9/yt-dlp-ubuntu-repo
+    build: .
