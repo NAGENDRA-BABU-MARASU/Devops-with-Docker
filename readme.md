@@ -319,3 +319,399 @@ Steps:
 6. That's it, render.com will download the image and deploy the service live.
 ```
 live link: [https://rails-project-latest.onrender.com/](https://rails-project-latest.onrender.com/)
+
+### [2.1](https://devopswithdocker.com/part-2/section-1#exercise-21)
+```
+version: '3.8'
+
+services:
+  simple-web-log:
+    image: devopsdockeruh/simple-web-service
+    volumes:
+      - ./text.log:/usr/src/app/text.log
+    
+```
+
+### [2.2](https://devopswithdocker.com/part-2/section-1#exercises-22---23)
+```
+version: '3.8'
+
+services:
+  simple-web-service:
+    image: devopsdockeruh/simple-web-service
+    ports:
+      - 8080:8080
+    command: server
+    
+```
+
+
+### [2.3](https://devopswithdocker.com/part-2/section-1#exercises-22---23)
+```
+version: '3.8'
+
+services:
+  example-backend:
+    image: dockerized-example-backend
+    build: ../../part1/1.13/example-backend 
+    ports:
+      - 8080:8080
+    container_name: example-backend 
+
+  example-frontend:
+    image: dockerized-example-frontend
+    build: ../../part1/1.12/example-frontend
+    ports:
+      - 5000:5000
+    container_name: example-frontend
+    
+```
+### [2.4](https://devopswithdocker.com/part-2/section-2#exercise-24)
+```
+version: '3.8'
+
+services:
+  redis:
+    image: redis 
+  example-backend:
+    image: dockerized-example-backend
+    build: ../../part1/1.13/example-backend 
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - 8080:8080
+    container_name: example-backend 
+
+  example-frontend:
+    image: dockerized-example-frontend
+    build: ../../part1/1.12/example-frontend
+    ports:
+      - 5000:5000
+    container_name: example-frontend
+```
+### [2.5](https://devopswithdocker.com/part-2/section-2#exercises-25)
+```
+~ docker compose up --scale compute=3
+```
+
+### [2.6](https://devopswithdocker.com/part-2/section-3#exercises-26---210)
+```
+version: '3.8'
+
+services:
+  redis:
+    image: redis 
+
+  db:
+    image: postgres:13.2-alpine
+    environment:
+      - POSTGRES_PASSWORD=root
+    container_name: db-for-2.6
+
+  example-backend:
+    image: dockerized-example-backend
+    # build: ../../part1/1.13/example-backend 
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=db
+      - POSTGRES_PASSWORD=root
+    ports:
+      - 8080:8080
+    container_name: example-backend 
+
+  example-frontend:
+    image: dockerized-example-frontend
+    # build: ../../part1/1.12/example-frontend
+    ports:
+      - 5000:5000
+    container_name: example-frontend
+```
+
+### [2.7](https://devopswithdocker.com/part-2/section-3#exercises-26---210)
+```
+version: '3.8'
+
+services:
+  redis:
+    image: redis 
+
+  db:
+    image: postgres:13.2-alpine
+    environment:
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - ./database:/var/lib/postgresql/data 
+    container_name: db-for-2.6
+
+  example-backend:
+    image: dockerized-example-backend
+    # build: ../../part1/1.13/example-backend 
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=db
+      - POSTGRES_PASSWORD=root
+    ports:
+      - 8080:8080
+    container_name: example-backend 
+
+  example-frontend:
+    image: dockerized-example-frontend
+    # build: ../../part1/1.12/example-frontend
+    ports:
+      - 5000:5000
+    container_name: example-frontend
+```
+
+### [2.8](https://devopswithdocker.com/part-2/section-3#exercises-26---210)
+```
+version: '3.8'
+
+services:
+  redis:
+    image: redis 
+
+  db:
+    image: postgres:13.2-alpine
+    environment:
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - ./database:/var/lib/postgresql/data 
+    container_name: db-for-2.6
+
+  example-backend:
+    image: dockerized-example-backend
+    build: ../../part1/1.13/example-backend 
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=db
+      - POSTGRES_PASSWORD=root
+      
+    ports:
+      - 8080:8080
+    container_name: example-backend 
+
+  example-frontend:
+    image: dockerized-example-frontend
+    build: ../../part1/1.12/example-frontend
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8080/
+    ports:
+      - 5000:5000
+    container_name: example-frontend
+
+  nginx-proxy:
+    image: nginx:1.19-alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    container_name: nginx-proxy
+    ports:
+      - 80:80
+    depends_on:
+      - example-frontend
+      - example-backend
+```
+nginx.conf
+```
+events { worker_connections 1024; }
+
+http { 
+  server { 
+    listen 80;
+
+    location / { 
+      proxy_pass http://example-frontend:5000/;
+    }
+
+    location /api/ { 
+      proxy_set_header Host $host;
+      proxy_pass http://example-backend:8080/;
+    }
+  }
+}
+```
+
+### [2.9](https://devopswithdocker.com/part-2/section-3#exercises-26---210)
+```
+version: '3.8'
+
+services:
+  redis:
+    image: redis 
+
+  db:
+    image: postgres:13.2-alpine
+    environment:
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - ./database:/var/lib/postgresql/data 
+    container_name: db-for-2.6
+
+  example-backend:
+    image: dockerized-example-backend
+    build: ../../part1/1.13/example-backend 
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=db
+      - POSTGRES_PASSWORD=root
+      - REQUEST_ORIGIN=http://localhost
+    ports:
+      - 8080:8080
+    container_name: example-backend 
+
+  example-frontend:
+    image: dockerized-example-frontend
+    build: ../../part1/1.12/example-frontend
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8080/
+    ports:
+      - 5000:5000
+    container_name: example-frontend
+
+  nginx-proxy:
+    image: nginx:1.19-alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    container_name: nginx-proxy
+    ports:
+      - 80:80
+    depends_on:
+      - example-frontend
+      - example-backend
+```
+nginx.conf
+```
+events { worker_connections 1024; }
+
+http { 
+  server { 
+    listen 80;
+
+    location / { 
+      proxy_pass http://example-frontend:5000/;
+    }
+
+    location /api/ { 
+      proxy_set_header Host $host;
+      proxy_pass http://example-backend:8080/;
+    }
+  }
+}
+```
+### [2.10](https://devopswithdocker.com/part-2/section-3#exercises-26---210)
+```
+version: '3.8'
+
+services:
+  redis:
+    image: redis 
+
+  db:
+    image: postgres:13.2-alpine
+    environment:
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - ./database:/var/lib/postgresql/data 
+    container_name: db-for-2.6
+
+  example-backend:
+    image: dockerized-example-backend
+    build: ../../part1/1.13/example-backend 
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=db
+      - POSTGRES_PASSWORD=root
+      - REQUEST_ORIGIN=http://localhost/
+    # ports:
+    #   - 8080:8080
+    container_name: example-backend 
+    depends_on:
+      - redis
+      - db
+
+  example-frontend:
+    image: dockerized-example-frontend
+    build: ../../part1/1.12/example-frontend
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost/api/
+    # ports:
+    #   - 5000
+    container_name: example-frontend
+    depends_on:
+      - example-backend
+
+  nginx-proxy:
+    image: nginx:1.19-alpine
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    container_name: nginx-proxy
+    ports:
+      - 80:80
+    depends_on:
+      - example-frontend
+```
+ngixn.conf
+```
+  events { worker_connections 1024; }
+
+http { 
+  server { 
+    listen 80;
+
+    location / { 
+      proxy_pass http://example-frontend:5000/;
+    }
+
+    location /api/ { 
+      proxy_set_header Host $host;
+      proxy_pass http://example-backend:8080/;
+    }
+  }
+}
+```
+nmap-output
+```
+docker run -it --rm --network host networkstatic/nmap localhost
+
+Starting Nmap 7.92 ( https://nmap.org ) at 2024-04-04 01:43 UTC
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.0000080s latency).
+Other addresses for localhost (not scanned): ::1
+Not shown: 999 closed tcp ports (reset)
+PORT   STATE SERVICE
+80/tcp open  http
+
+Nmap done: 1 IP address (1 host up) scanned in 0.15 seconds
+
+```
+
+### [2.11](https://devopswithdocker.com/part-2/section-4#exercise-211)
+```
+# dockerfile
+
+FROM node:16
+
+WORKDIR /usr/src/app
+
+COPY package* ./ 
+
+RUN npm install 
+
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  pokedex-dev-env:
+    build: .
+    command: npm start 
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    container_name: pokedex-dev-env
+
+volumes:
+  node_modules:
+```
