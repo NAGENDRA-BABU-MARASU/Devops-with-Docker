@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  pokedex-dev-env:
+    build: .
+    command: npm start 
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    container_name: pokedex-dev-env
+
+volumes:
+  node_modules:
