@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  example-backend:
+    image: dockerized-example-backend
+    build: ../../part1/1.13/example-backend 
+    ports:
+      - 8080:8080
+    container_name: example-backend 
+
+  example-frontend:
+    image: dockerized-example-frontend
+    build: ../../part1/1.12/example-frontend
+    ports:
+      - 5000:5000
+    container_name: example-frontend
